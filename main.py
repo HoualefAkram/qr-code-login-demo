@@ -1,8 +1,18 @@
 from fastapi import FastAPI, HTTPException
 from datetime import datetime, timedelta
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 uuids = dict()
 
@@ -43,6 +53,7 @@ def save_token(uuid: str, token: str):
         raise HTTPException(status_code=404, detail="Login info not found")
     uuids[uuid]["state"] = "accepted"
     uuids[uuid]["token"] = token
+    return {"status": "ok"}
 
 
 # Fetched by the TV to login in
